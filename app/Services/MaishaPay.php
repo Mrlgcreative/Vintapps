@@ -120,7 +120,7 @@ class MaishaPay
             'reference' => $transactionId,
             'amount' => $payload['order']['amount'],
             'currency' => $payload['order']['currency'],
-            'phone' => '+' . $phone,
+            'phone' => $payload['paymentChannel']['walletID'],
             'provider' => $provider,
             'url' => $this->collectUrl,
         ]);
@@ -178,9 +178,13 @@ class MaishaPay
     public function checkStatus(string $transactionId): array
     {
         try {
-            $response = Http::withHeaders($this->getHeaders())
+            $response = Http::withoutVerifying()
                 ->timeout(15)
-                ->get($this->baseUrl . '/payments/' . $transactionId . '/status');
+                ->post($this->baseUrl . '/verify', [
+                    'transactionReference' => $transactionId,
+                    'publicApiKey' => $this->apiKey,
+                    'secretApiKey' => $this->secretKey,
+                ]);
 
             $result = $response->json();
 
@@ -195,6 +199,7 @@ class MaishaPay
                     ?? $result['status']
                     ?? $result['transactionStatus']
                     ?? $result['state']
+                    ?? $result['data']['transactionStatus']
                     ?? 'unknown';
 
                 return [

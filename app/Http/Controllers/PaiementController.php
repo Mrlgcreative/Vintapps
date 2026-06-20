@@ -133,8 +133,7 @@ class PaiementController extends Controller
         abort_unless($paiement->statut === 'en_attente', 400, 'Paiement déjà traité.');
 
         if ($maishaPay->isConfigured()) {
-            $idStatut = $paiement->reference_externe ?? $paiement->reference;
-            $result = $maishaPay->checkStatus($idStatut);
+            $result = $maishaPay->checkStatus($paiement->reference);
             if ($result['success'] && in_array($result['status'], ['SUCCESS', 'success', 'SUCCES', 'PAID', 'paid', 'confirmed', 'CONFIRMED'])) {
                 $paiement->update(['statut' => 'paye']);
                 $message = 'Paiement confirmé via MaishaPay.';
