@@ -136,7 +136,12 @@ class AnnonceController extends Controller
         $filename = uniqid('annonce_') . '.webp';
         $path = 'annonces/' . $filename;
 
-        $image->save(storage_path('app/public/' . $path), quality: 80);
+        $fullPath = storage_path('app/public/' . $path);
+        if (!is_dir(dirname($fullPath))) {
+            mkdir(dirname($fullPath), 0755, true);
+        }
+
+        $image->save($fullPath, quality: 80);
 
         return $path;
     }
