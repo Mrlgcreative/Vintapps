@@ -19,11 +19,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (! file_exists(public_path('storage'))) {
-            $this->app->make('files')->link(
-                storage_path('app/public'),
-                public_path('storage')
-            );
+        if (! file_exists(public_path('storage')) && ! app()->runningInConsole()) {
+            try {
+                $this->app->make('files')->link(
+                    storage_path('app/public'),
+                    public_path('storage')
+                );
+            } catch (\Throwable $e) {
+                logger()->error('Échec création lien symbolique storage: ' . $e->getMessage());
+            }
         }
     }
 }
