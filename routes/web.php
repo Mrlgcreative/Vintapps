@@ -119,3 +119,13 @@ Route::middleware('auth')->prefix('vendeur')->name('vendeur.')->group(function (
     Route::get('/ventes', [App\Http\Controllers\Vendeur\VenteController::class, 'index'])->name('ventes');
     Route::post('/ventes/{commande}/expedier', [App\Http\Controllers\Vendeur\VenteController::class, 'expedier'])->name('ventes.expedier');
 });
+
+// Fallback route for storage files (when symlink is not available on shared hosting)
+Route::get('storage/{path}', function (string $path) {
+    $fullPath = storage_path('app/public/' . $path);
+    if (! file_exists($fullPath)) {
+        abort(404);
+    }
+    $mime = mime_content_type($fullPath);
+    return response(file_get_contents($fullPath), 200, ['Content-Type' => $mime]);
+})->where('path', '.*');
