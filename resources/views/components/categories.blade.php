@@ -17,28 +17,21 @@
 @endphp
 
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-    <div class="text-center mb-10">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ $titre }}</h2>
-        <p class="mt-2 text-gray-500">Explorez nos catégories d'articles</p>
-    </div>
+    <h2 class="text-center text-2xl sm:text-3xl font-bold text-gray-900 mb-10">{{ $titre }}</h2>
 
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
         @forelse($categories as $cat)
             <a href="{{ route('annonces.index', ['categorie' => $cat->slug]) }}"
                class="group bg-white rounded-xl shadow-sm border border-gray-100 p-4 text-center hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-                <div class="w-14 h-14 mx-auto rounded-xl flex items-center justify-center mb-3"
-                     style="background-color: {{ $cat->couleur }}12; color: {{ $cat->couleur }}">
+                <span class="block w-14 h-14 mx-auto rounded-xl flex items-center justify-center mb-3"
+                      style="background-color: {{ $cat->couleur }}12; color: {{ $cat->couleur }}">
                     {!! $icones[$cat->icone] ?? '<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>' !!}
-                </div>
-                <h3 class="text-sm font-semibold text-gray-900 group-hover:text-[#723EC3] transition">
-                    {{ $cat->libelle }}
-                </h3>
+                </span>
+                <h3 class="text-sm font-semibold text-gray-900 group-hover:text-[#723EC3] transition">{{ $cat->libelle }}</h3>
                 <p class="text-xs text-gray-400 mt-0.5">{{ $cat->annonces_count ?? 0 }} annonces</p>
             </a>
         @empty
-            <div class="col-span-full text-center py-12 text-gray-400">
-                Aucune catégorie pour le moment.
-            </div>
+            <p class="col-span-full text-center py-12 text-gray-400">Aucune catégorie pour le moment.</p>
         @endforelse
     </div>
 </section>
